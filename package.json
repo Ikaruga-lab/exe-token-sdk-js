@@ -12,7 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/kishin-lab/exe-token-sdk-js.git"
   },
-  "keywords": ["ExeToken"],
+  "keywords": [
+    "ExeToken"
+  ],
   "author": "kyotaw",
   "license": "MIT",
   "bugs": {
@@ -20,6 +22,7 @@
   },
   "homepage": "",
   "dependencies": {
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "typescript": "^5.0.2"
   }
 }

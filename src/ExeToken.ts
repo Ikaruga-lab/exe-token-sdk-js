@@ -3,7 +3,7 @@ import { base64 } from 'ethers/lib/utils'
 import tokenAbi from './ExeToken.json'
 import { tokenContractAddresses } from './Addresses'
 import { toJSValue } from './JSValue'
-import type { ExeToken, TokenAttributes, TokenCategory } from '@/sdk/Model'
+import type { ExeToken, TokenAttributes, TokenCategory } from './Model'
 
 export interface Config {
   networkUrl: string

@@ -180,21 +180,23 @@ function _makeArray(arrayValue: Array<any>, array: JSArray) {
       _makeArray(elemValue, array)
       array.rootElementIndex = curRootIndex
     } else if (typeof elemValue === 'object') {
-      const objectValue = _toJSValue(elemValue)
+      const objectValue = toJSValue(elemValue)
       const elem: JSArrayElement = { ...objectValue }
       _pushElement(array, elem)
     } else {
-      const jsValue = _toJSValue(elemValue)
+      const jsValue = toJSValue(elemValue)
       const elem: JSArrayElement = { ...jsValue }
       _pushElement(array, elem)
     }
   }
 }
 
-function _makeObject(objectValue: object, object: JSObject) {
-  for (const [propertyKey, propertyValue] of Object.entries(objectValue)) {
+function _makeObject(objectValue: {[key:string]:any}, object: JSObject) {
+  Object.keys(objectValue).forEach(key => {
+    const propertyKey = key
+    const propertyValue = objectValue[key]
     if (Array.isArray(propertyValue)) {
-      const arrayValue = _toJSValue(propertyValue)
+      const arrayValue = toJSValue(propertyValue)
       const property: JSObjectProperty = {
         valueType: JSValueType.value_array,
         value: arrayValue.value,
@@ -216,7 +218,7 @@ function _makeObject(objectValue: object, object: JSObject) {
       _makeObject(propertyValue, object)
       object.rootPropertyIndex = curRootIndex
     } else {
-      const jsValue = _toJSValue(propertyValue)
+      const jsValue = toJSValue(propertyValue)
       const property: JSObjectProperty = {
         ...jsValue,
         key: propertyKey,
@@ -224,7 +226,7 @@ function _makeObject(objectValue: object, object: JSObject) {
       }
       _setProperty(object, property)
     }
-  }
+  })
 }
 
 function _pushElement(array: JSArray, elem: JSArrayElement): number {
