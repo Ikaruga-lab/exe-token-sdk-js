@@ -59,18 +59,18 @@ export type InitialState = {
 export function toJSValue(value: any): JSValue {
   const coder = ethers.utils.defaultAbiCoder
   const typeOfValue = typeof value
-  if (value === 'undefined') {
+  if (value === undefined) {
     return {
       valueType: JSValueType.value_undefined,
       identifierIndex: 0,
-      value: '',
+      value: coder.encode(['string'], ['']),
       numberSign: true 
     } 
   } else if (value === null) {
     return {
       valueType: JSValueType.value_null,
       identifierIndex: 0,
-      value: '',
+      value: coder.encode(['string'], ['']),
       numberSign: true 
     } 
   } else if (typeOfValue === 'number') {
@@ -158,7 +158,7 @@ export function toJSValue(value: any): JSValue {
     return {
       valueType: JSValueType.value_undefined,
       identifierIndex: 0,
-      value: '',
+      value: coder.encode(['string'], ['']),
       numberSign: true 
     }
   }

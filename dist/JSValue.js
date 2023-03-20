@@ -23,11 +23,11 @@ var JSValueType;
 function toJSValue(value) {
     const coder = ethers_1.ethers.utils.defaultAbiCoder;
     const typeOfValue = typeof value;
-    if (value === 'undefined') {
+    if (value === undefined) {
         return {
             valueType: JSValueType.value_undefined,
             identifierIndex: 0,
-            value: '',
+            value: coder.encode(['string'], ['']),
             numberSign: true
         };
     }
@@ -35,7 +35,7 @@ function toJSValue(value) {
         return {
             valueType: JSValueType.value_null,
             identifierIndex: 0,
-            value: '',
+            value: coder.encode(['string'], ['']),
             numberSign: true
         };
     }
@@ -130,7 +130,7 @@ function toJSValue(value) {
         return {
             valueType: JSValueType.value_undefined,
             identifierIndex: 0,
-            value: '',
+            value: coder.encode(['string'], ['']),
             numberSign: true
         };
     }
