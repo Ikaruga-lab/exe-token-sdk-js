@@ -9,6 +9,7 @@ const utils_1 = require("ethers/lib/utils");
 const ExeToken_json_1 = __importDefault(require("./ExeToken.json"));
 const Addresses_1 = require("./Addresses");
 const JSValue_1 = require("./JSValue");
+const Network_1 = require("./Network");
 class ExeTokenContract {
     constructor(config) {
         this.config = config;
@@ -16,10 +17,10 @@ class ExeTokenContract {
             url: config.networkUrl,
             timeout: config.timeout || 900000
         });
-        const networkName = config.networkName ?? 'mainnet';
-        const tokenAddress = networkName === 'localhost' ?
+        const network = config.network ?? Network_1.Network.ethereum_mainnet;
+        const tokenAddress = network === Network_1.Network.ethereum_localhost ?
             config.localhostTokenAddress :
-            Addresses_1.tokenContractAddresses[networkName];
+            Addresses_1.tokenContractAddresses[network];
         if (tokenAddress === undefined) {
             throw new Error('valid networkName or local token contract address is required.');
         }

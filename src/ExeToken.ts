@@ -3,11 +3,12 @@ import { base64 } from 'ethers/lib/utils'
 import tokenAbi from './ExeToken.json'
 import { tokenContractAddresses } from './Addresses'
 import { toJSValue } from './JSValue'
+import { Network } from './Network'
 import type { ExeToken, TokenAttributes, TokenCategory } from './Model'
 
 export interface Config {
   networkUrl: string
-  networkName?: 'mainnet' | 'goerli' | 'localhost'
+  network?: Network 
   localhostTokenAddress?: string
   signerAddress?: string
   mintGasLimit?: number
@@ -22,10 +23,10 @@ export class ExeTokenContract {
       url: config.networkUrl,
       timeout: config.timeout || 900000
     })
-    const networkName = config.networkName ?? 'mainnet' 
-    const tokenAddress = networkName === 'localhost' ?
+    const network = config.network ?? Network.ethereum_mainnet
+    const tokenAddress = network === Network.ethereum_localhost ?
       config.localhostTokenAddress :
-      tokenContractAddresses[networkName]
+      tokenContractAddresses[network]
 
     if (tokenAddress === undefined) {
       throw new Error('valid networkName or local token contract address is required.')
@@ -53,18 +54,18 @@ export class ExeTokenContract {
     return res.map((id: BigInt) => id.toString())
   }
 
-  async execute(tokenId: string, args: any[]): Promise<any> {
+  async execute(tokenId: string, args: any[]=[]): Promise<any> {
     const argValues = args.map(arg => toJSValue(arg))
     const res = await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: 300000000 })
     return JSON.parse(res)
   }
-  async test(code: string, args: any[]): Promise<string> {
+  async test(code: string, args: any[]=[]): Promise<string> {
     const argValues = args.map(arg => toJSValue(arg))
     const res = await this.tokenContract.test(code, argValues, { gasLimit: 300000000 })
     return JSON.parse(res)
   }
 
-  async preview(attrs: TokenAttributes, args: any[]): Promise<ExeToken> {
+  async preview(attrs: TokenAttributes, args: any[]=[]): Promise<ExeToken> {
     const argValues = args.map(arg => toJSValue(arg))
     const dataUri = await this.tokenContract.preview(attrs, args)
     return this._decodeTokenUri(dataUri)

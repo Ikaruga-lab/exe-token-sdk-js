@@ -1,5 +1,5 @@
 {
-  "name": "exetoken-js",
+  "name": "exetoken-sdk",
   "version": "0.0.0",
   "description": "SDK for EexToken contract in JavaScript/TypeScript",
   "main": "dist/index.js",
