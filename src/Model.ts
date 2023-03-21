@@ -28,8 +28,3 @@ export interface TokenCategory {
   id: number
   disabled: boolean 
 }
-
-export interface FunctionSignature {
-  name: string
-  args: string[]
-}
