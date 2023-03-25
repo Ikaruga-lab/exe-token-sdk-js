@@ -27,8 +27,28 @@ class ExeTokenContract {
         this.tokenContract = new ethers_1.ethers.Contract(tokenAddress, ExeToken_json_1.default.abi, config.signerAddress === undefined ? provider : provider.getSigner(config.signerAddress));
     }
     async getToken(tokenId) {
-        const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: 300000000 });
-        return this._decodeTokenUri(dataUri, tokenId);
+        try {
+            const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: 300000000 });
+            return this._decodeTokenUri(dataUri, tokenId);
+        }
+        catch (err) {
+            if (err.errorArgs?.length > 0 && err.errorArgs[0] === 'token disabled') {
+                return {
+                    tokenId: tokenId,
+                    name: '',
+                    description: '',
+                    image: '',
+                    code: '',
+                    lang: '',
+                    creator: '',
+                    owner: '',
+                    disabled: true
+                };
+            }
+            else {
+                throw err;
+            }
+        }
     }
     async totalSupply() {
         const supply = await this.tokenContract.totalSupply();
@@ -74,7 +94,8 @@ class ExeTokenContract {
             code: '',
             lang: '',
             creator: '',
-            owner: ''
+            owner: '',
+            disabled: false
         };
         data.attributes.forEach((attr) => {
             switch (attr.trait_type) {

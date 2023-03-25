@@ -7,6 +7,7 @@ export interface ExeToken {
   image: string
   creator: string
   owner: string
+  disabled: boolean
 }
 
 export interface TokenAttributes {
