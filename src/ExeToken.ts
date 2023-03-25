@@ -134,6 +134,6 @@ export class ExeTokenContract {
   }
   
   private get callGasLimit(): number {
-    return this.config.mintGasLimit ?? 300000000
+    return this.config.callGasLimit ?? 30000000
   }
 }
