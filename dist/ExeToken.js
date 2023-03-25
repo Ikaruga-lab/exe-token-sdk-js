@@ -28,7 +28,7 @@ class ExeTokenContract {
     }
     async getToken(tokenId) {
         try {
-            const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: 300000000 });
+            const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: this.callGasLimit });
             return this._decodeTokenUri(dataUri, tokenId);
         }
         catch (err) {
@@ -64,11 +64,11 @@ class ExeTokenContract {
     }
     async execute(tokenId, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
-        return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: 300000000 });
+        return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: this.callGasLimit });
     }
     async test(code, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
-        return await this.tokenContract.test(code, argValues, { gasLimit: 300000000 });
+        return await this.tokenContract.test(code, argValues, { gasLimit: this.callGasLimit });
     }
     async preview(attrs, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
@@ -118,6 +118,9 @@ class ExeTokenContract {
     }
     get mintGasLimit() {
         return this.config.mintGasLimit ?? 30000000;
+    }
+    get callGasLimit() {
+        return this.config.mintGasLimit ?? 300000000;
     }
 }
 exports.ExeTokenContract = ExeTokenContract;
