@@ -34,19 +34,21 @@ class ExeTokenContract {
         const supply = await this.tokenContract.totalSupply();
         return supply.toNumber();
     }
+    async getTokenIdsByOwner(ownerAddress) {
+        const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress);
+        return res.map((id) => id.toString());
+    }
     async getTokenIdsByCreator(creatorAddress) {
         const res = await this.tokenContract.getTokenIdsByCreator(creatorAddress);
         return res.map((id) => id.toString());
     }
     async execute(tokenId, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
-        const res = await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: 300000000 });
-        return JSON.parse(res);
+        return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: 300000000 });
     }
     async test(code, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
-        const res = await this.tokenContract.test(code, argValues, { gasLimit: 300000000 });
-        return JSON.parse(res);
+        return await this.tokenContract.test(code, argValues, { gasLimit: 300000000 });
     }
     async preview(attrs, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));

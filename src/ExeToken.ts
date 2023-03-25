@@ -49,20 +49,23 @@ export class ExeTokenContract {
     return supply.toNumber()
   }
 
+  async getTokenIdsByOwner(ownerAddress: string): Promise<string[]> {
+    const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress)
+    return res.map((id: BigInt) => id.toString())
+  } 
+
   async getTokenIdsByCreator(creatorAddress: string): Promise<string[]> {
     const res = await this.tokenContract.getTokenIdsByCreator(creatorAddress)
     return res.map((id: BigInt) => id.toString())
   }
 
-  async execute(tokenId: string, args: any[]=[]): Promise<any> {
+  async execute(tokenId: string, args: any[]=[]): Promise<string> {
     const argValues = args.map(arg => toJSValue(arg))
-    const res = await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: 300000000 })
-    return JSON.parse(res)
+    return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: 300000000 })
   }
   async test(code: string, args: any[]=[]): Promise<string> {
     const argValues = args.map(arg => toJSValue(arg))
-    const res = await this.tokenContract.test(code, argValues, { gasLimit: 300000000 })
-    return JSON.parse(res)
+    return await this.tokenContract.test(code, argValues, { gasLimit: 300000000 })
   }
 
   async preview(attrs: TokenAttributes, args: any[]=[]): Promise<ExeToken> {
