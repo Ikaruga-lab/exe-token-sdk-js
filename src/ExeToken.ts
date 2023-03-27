@@ -18,25 +18,26 @@ export interface Config {
 
 export class ExeTokenContract {
   tokenContract: ethers.Contract
+  provider: ethers.providers.JsonRpcProvider
 
   constructor(readonly config: Config) {
-    const provider = new ethers.providers.JsonRpcProvider({
-      url: config.networkUrl,
-      timeout: config.timeout || 900000
-    })
     const network = config.network ?? Network.ethereum_mainnet
     const tokenAddress = network === Network.ethereum_localhost ?
       config.localhostTokenAddress :
       tokenContractAddresses[network]
 
-    if (tokenAddress === undefined) {
+    if (tokenAddress === undefined || tokenAddress === '') {
       throw new Error('valid networkName or local token contract address is required.')
     }
 
+    this.provider = new ethers.providers.JsonRpcProvider({
+      url: config.networkUrl,
+      timeout: config.timeout || 900000
+    })
     this.tokenContract = new ethers.Contract(
       tokenAddress,
       tokenAbi.abi,
-      config.signerAddress === undefined ? provider : provider.getSigner(config.signerAddress)
+      this.provider
     )
   }
 
@@ -94,6 +95,9 @@ export class ExeTokenContract {
   }
 
   async mint(attrs: TokenAttributes, categories: TokenCategory[]): Promise<string> {
+    if (this.config.signerAddress === undefined) {
+      throw new Error('signerAddress is required for transactions')
+    }
     const transaction = await this.tokenContract.mint(attrs, categories.map(cat => cat.id), { gasLimit: this.mintGasLimit })
     return transaction.hash
   }

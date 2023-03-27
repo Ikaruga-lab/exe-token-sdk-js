@@ -1,7 +1,7 @@
 {
   "name": "exetoken-sdk",
-  "version": "0.0.0",
-  "description": "SDK for EexToken contract in JavaScript/TypeScript",
+  "version": "0.1.1",
+  "description": "SDK for EexToken contract",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "prepublish": "tsc",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kishin-lab/exe-token-sdk-js.git"
+    "url": "git+https://github.com/Ikaruga-lab/exe-token-sdk-js.git"
   },
   "keywords": [
     "ExeToken"
   ],
-  "author": "kyotaw",
+  "author": "Ikaruga",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kishin-lab/exe-token-sdk-js/issues"
+    "url": "https://github.com/Ikaruga-lab/exe-token-sdk-js/issues"
   },
   "homepage": "",
   "dependencies": {
