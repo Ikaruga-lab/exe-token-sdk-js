@@ -13,18 +13,18 @@ const Network_1 = require("./Network");
 class ExeTokenContract {
     constructor(config) {
         this.config = config;
-        const provider = new ethers_1.ethers.providers.JsonRpcProvider({
+        const network = config.network ?? Network_1.Network.ethereum_mainnet;
+        const tokenAddress = network === Network_1.Network.ethereum_localhost ?
+            config.tokenContractAddress :
+            Addresses_1.tokenContractAddresses[network];
+        if (tokenAddress === undefined || tokenAddress === '') {
+            throw new Error('valid networkName or local token contract address is required.');
+        }
+        this.provider = new ethers_1.ethers.providers.JsonRpcProvider({
             url: config.networkUrl,
             timeout: config.timeout || 900000
         });
-        const network = config.network ?? Network_1.Network.ethereum_mainnet;
-        const tokenAddress = network === Network_1.Network.ethereum_localhost ?
-            config.localhostTokenAddress :
-            Addresses_1.tokenContractAddresses[network];
-        if (tokenAddress === undefined) {
-            throw new Error('valid networkName or local token contract address is required.');
-        }
-        this.tokenContract = new ethers_1.ethers.Contract(tokenAddress, ExeToken_json_1.default.abi, config.signerAddress === undefined ? provider : provider.getSigner(config.signerAddress));
+        this.tokenContract = new ethers_1.ethers.Contract(tokenAddress, ExeToken_json_1.default.abi, this.provider);
     }
     async getToken(tokenId) {
         try {
@@ -75,10 +75,6 @@ class ExeTokenContract {
         const dataUri = await this.tokenContract.preview(attrs, args);
         return this._decodeTokenUri(dataUri);
     }
-    async mint(attrs, categories) {
-        const transaction = await this.tokenContract.mint(attrs, categories.map(cat => cat.id), { gasLimit: this.mintGasLimit });
-        return transaction.hash;
-    }
     async getTxHash(tokenId) {
         const filter = this.tokenContract.filters.Minted(null, +tokenId);
         const evt = await this.tokenContract.queryFilter(filter);
@@ -115,9 +111,6 @@ class ExeTokenContract {
             }
         });
         return token;
-    }
-    get mintGasLimit() {
-        return this.config.mintGasLimit ?? 30000000;
     }
     get callGasLimit() {
         return this.config.callGasLimit ?? 30000000;

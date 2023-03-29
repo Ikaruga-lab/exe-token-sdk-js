@@ -9,9 +9,7 @@ import type { ExeToken, TokenAttributes, TokenCategory } from './Model'
 export interface Config {
   networkUrl: string
   network?: Network 
-  localhostTokenAddress?: string
-  signerAddress?: string
-  mintGasLimit?: number
+  tokenContractAddress?: string
   callGasLimit?: number
   timeout?: number
 }
@@ -23,7 +21,7 @@ export class ExeTokenContract {
   constructor(readonly config: Config) {
     const network = config.network ?? Network.ethereum_mainnet
     const tokenAddress = network === Network.ethereum_localhost ?
-      config.localhostTokenAddress :
+      config.tokenContractAddress :
       tokenContractAddresses[network]
 
     if (tokenAddress === undefined || tokenAddress === '') {
@@ -94,14 +92,6 @@ export class ExeTokenContract {
     return this._decodeTokenUri(dataUri)
   }
 
-  async mint(attrs: TokenAttributes, categories: TokenCategory[]): Promise<string> {
-    if (this.config.signerAddress === undefined) {
-      throw new Error('signerAddress is required for transactions')
-    }
-    const transaction = await this.tokenContract.mint(attrs, categories.map(cat => cat.id), { gasLimit: this.mintGasLimit })
-    return transaction.hash
-  }
-
   async getTxHash(tokenId: string): Promise<string> {
     const filter = this.tokenContract.filters.Minted(null, +tokenId)
     const evt = await this.tokenContract.queryFilter(filter)
@@ -133,10 +123,6 @@ export class ExeTokenContract {
     return token
   }
 
-  private get mintGasLimit(): number {
-    return this.config.mintGasLimit ?? 30000000
-  }
-  
   private get callGasLimit(): number {
     return this.config.callGasLimit ?? 30000000
   }
