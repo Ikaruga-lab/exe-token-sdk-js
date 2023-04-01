@@ -7,6 +7,7 @@ export interface Config {
     tokenContractAddress?: string;
     callGasLimit?: number;
     timeout?: number;
+    from?: string;
 }
 export declare class ExeTokenContract {
     readonly config: Config;

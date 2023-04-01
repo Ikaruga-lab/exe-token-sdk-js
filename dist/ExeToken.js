@@ -28,7 +28,7 @@ class ExeTokenContract {
     }
     async getToken(tokenId) {
         try {
-            const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: this.callGasLimit });
+            const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: this.callGasLimit, from: this.config.from });
             return this._decodeTokenUri(dataUri, tokenId);
         }
         catch (err) {
@@ -51,24 +51,24 @@ class ExeTokenContract {
         }
     }
     async totalSupply() {
-        const supply = await this.tokenContract.totalSupply();
+        const supply = await this.tokenContract.totalSupply({ from: this.config.from });
         return supply.toNumber();
     }
     async getTokenIdsByOwner(ownerAddress) {
-        const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress);
+        const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress, { from: this.config.from });
         return res.map((id) => id.toString());
     }
     async getTokenIdsByCreator(creatorAddress) {
-        const res = await this.tokenContract.getTokenIdsByCreator(creatorAddress);
+        const res = await this.tokenContract.getTokenIdsByCreator(creatorAddress, { from: this.config.from });
         return res.map((id) => id.toString());
     }
     async execute(tokenId, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
-        return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: this.callGasLimit });
+        return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: this.callGasLimit, from: this.config.from });
     }
     async test(code, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
-        return await this.tokenContract.test(code, argValues, { gasLimit: this.callGasLimit });
+        return await this.tokenContract.test(code, argValues, { gasLimit: this.callGasLimit, from: this.config.from });
     }
     async preview(attrs, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));

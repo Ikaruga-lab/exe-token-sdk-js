@@ -12,6 +12,7 @@ export interface Config {
   tokenContractAddress?: string
   callGasLimit?: number
   timeout?: number
+  from?: string
 }
 
 export class ExeTokenContract {
@@ -41,7 +42,7 @@ export class ExeTokenContract {
 
   async getToken(tokenId: string): Promise<ExeToken> {
     try {
-      const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: this.callGasLimit })
+      const dataUri = await this.tokenContract.tokenURI(tokenId, { gasLimit: this.callGasLimit, from: this.config.from })
       return this._decodeTokenUri(dataUri, tokenId)
     } catch (err: any) {
       if (err.errorArgs?.length > 0 && err.errorArgs[0] === 'token disabled') {
@@ -63,27 +64,27 @@ export class ExeTokenContract {
   }
 
   async totalSupply(): Promise<number> {
-    const supply: ethers.BigNumber = await this.tokenContract.totalSupply()
+    const supply: ethers.BigNumber = await this.tokenContract.totalSupply({ from: this.config.from })
     return supply.toNumber()
   }
 
   async getTokenIdsByOwner(ownerAddress: string): Promise<string[]> {
-    const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress)
+    const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress, { from: this.config.from })
     return res.map((id: BigInt) => id.toString())
   } 
 
   async getTokenIdsByCreator(creatorAddress: string): Promise<string[]> {
-    const res = await this.tokenContract.getTokenIdsByCreator(creatorAddress)
+    const res = await this.tokenContract.getTokenIdsByCreator(creatorAddress, { from: this.config.from })
     return res.map((id: BigInt) => id.toString())
   }
 
   async execute(tokenId: string, args: any[]=[]): Promise<string> {
     const argValues = args.map(arg => toJSValue(arg))
-    return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: this.callGasLimit })
+    return await this.tokenContract.executeToString(BigInt(tokenId), argValues, { gasLimit: this.callGasLimit, from: this.config.from })
   }
   async test(code: string, args: any[]=[]): Promise<string> {
     const argValues = args.map(arg => toJSValue(arg))
-    return await this.tokenContract.test(code, argValues, { gasLimit: this.callGasLimit })
+    return await this.tokenContract.test(code, argValues, { gasLimit: this.callGasLimit, from: this.config.from })
   }
 
   async preview(attrs: TokenAttributes, args: any[]=[]): Promise<ExeToken> {
