@@ -4,7 +4,7 @@ import tokenAbi from './ExeToken.json'
 import { tokenContractAddresses } from './Addresses'
 import { toJSValue } from './JSValue'
 import { Network } from './Network'
-import type { ExeToken, TokenAttributes, TokenCategory } from './Model'
+import type { ExeToken, TokenAttributes } from './Model'
 
 export interface Config {
   networkUrl: string
@@ -69,7 +69,7 @@ export class ExeTokenContract {
   }
 
   async getTokenIdsByOwner(ownerAddress: string): Promise<string[]> {
-    const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress, { from: this.config.from })
+    const res = await this.tokenContract.getTokenIdsByOwner(ownerAddress, { from: this.config.from })
     return res.map((id: BigInt) => id.toString())
   } 
 
@@ -89,7 +89,7 @@ export class ExeTokenContract {
 
   async preview(attrs: TokenAttributes, args: any[]=[]): Promise<ExeToken> {
     const argValues = args.map(arg => toJSValue(arg))
-    const dataUri = await this.tokenContract.preview(attrs, args)
+    const dataUri = await this.tokenContract.preview(attrs, args, { gasLimit: this.callGasLimit, from: this.config.from })
     return this._decodeTokenUri(dataUri)
   }
 

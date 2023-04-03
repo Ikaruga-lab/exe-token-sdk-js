@@ -55,7 +55,7 @@ class ExeTokenContract {
         return supply.toNumber();
     }
     async getTokenIdsByOwner(ownerAddress) {
-        const res = await this.tokenContract.getTokenIdsByCreator(ownerAddress, { from: this.config.from });
+        const res = await this.tokenContract.getTokenIdsByOwner(ownerAddress, { from: this.config.from });
         return res.map((id) => id.toString());
     }
     async getTokenIdsByCreator(creatorAddress) {
@@ -72,7 +72,7 @@ class ExeTokenContract {
     }
     async preview(attrs, args = []) {
         const argValues = args.map(arg => (0, JSValue_1.toJSValue)(arg));
-        const dataUri = await this.tokenContract.preview(attrs, args);
+        const dataUri = await this.tokenContract.preview(attrs, args, { gasLimit: this.callGasLimit, from: this.config.from });
         return this._decodeTokenUri(dataUri);
     }
     async getTxHash(tokenId) {
