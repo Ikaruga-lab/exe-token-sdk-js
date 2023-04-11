@@ -8,6 +8,7 @@ export interface ExeToken {
     creator: string;
     owner: string;
     disabled: boolean;
+    executedCount: number;
 }
 export interface TokenAttributes {
     creator: string;

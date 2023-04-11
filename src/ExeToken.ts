@@ -55,7 +55,8 @@ export class ExeTokenContract {
           lang: '', 
           creator: '',
           owner: '',
-          disabled: true 
+          disabled: true,
+          executedCount: 0
         }
       } else {
         throw err
@@ -110,7 +111,8 @@ export class ExeTokenContract {
       lang: '', 
       creator: '',
       owner: '',
-      disabled: false
+      disabled: false,
+      executedCount: 0
     }
     data.attributes.forEach((attr: any) => {
       switch (attr.trait_type) {
@@ -118,6 +120,7 @@ export class ExeTokenContract {
         case 'lang': token.lang = attr.value; break
         case 'creator': token.creator = attr.value; break
         case 'owner': token.owner = attr.value; break
+        case 'executedCount': token.executedCount = +attr.value; break
         default: break
       }
     })

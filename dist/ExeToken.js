@@ -42,7 +42,8 @@ class ExeTokenContract {
                     lang: '',
                     creator: '',
                     owner: '',
-                    disabled: true
+                    disabled: true,
+                    executedCount: 0
                 };
             }
             else {
@@ -91,7 +92,8 @@ class ExeTokenContract {
             lang: '',
             creator: '',
             owner: '',
-            disabled: false
+            disabled: false,
+            executedCount: 0
         };
         data.attributes.forEach((attr) => {
             switch (attr.trait_type) {
@@ -106,6 +108,9 @@ class ExeTokenContract {
                     break;
                 case 'owner':
                     token.owner = attr.value;
+                    break;
+                case 'executedCount':
+                    token.executedCount = +attr.value;
                     break;
                 default: break;
             }
